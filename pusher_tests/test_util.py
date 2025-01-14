@@ -30,17 +30,14 @@ class TestUtil(unittest.TestCase):
                 pusher.util.validate_channel(invalid_channel)
 
     def test_validate_server_to_user_channel(self):
+        self.assertEqual("#server-to-user-123", pusher.util.validate_channel("#server-to-user-123"))
+        self.assertEqual("#server-to-user-user123", pusher.util.validate_channel("#server-to-user-user123"))
+        self.assertEqual("#server-to-user-ID-123", pusher.util.validate_channel("#server-to-user-ID-123"))
 
-        valid_server_to_user_channel = "#server-to-user-123"
-        invalid_server_to_user_channel = "#server-to-useR-123"
-        valid_server_to_users = "#server-to-users"
-        valid_server_to_user1234 = "#server-to-user1234"
-
-        self.assertEqual(valid_server_to_user_channel, pusher.util.validate_channel(valid_server_to_user_channel))
-        self.assertEqual(valid_server_to_users, pusher.util.validate_channel(valid_server_to_users))
-        self.assertEqual(valid_server_to_user1234, pusher.util.validate_channel(valid_server_to_user1234))
         with self.assertRaises(ValueError):
-            pusher.util.validate_channel(invalid_server_to_user_channel)
+            pusher.util.validate_channel("#server-to-useR-123")
+            pusher.util.validate_channel("#server-to-user1234")
+            pusher.util.validate_channel("#server-to-users")
 
 
 if __name__ == '__main__':

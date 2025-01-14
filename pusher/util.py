@@ -12,8 +12,9 @@ import six
 import sys
 import base64
 
+SERVER_TO_USER_PREFIX = "#server-to-user-"
 channel_name_re = re.compile(r'\A[-a-zA-Z0-9_=@,.;]+\Z')
-server_to_user_channel_re = re.compile(r'\A#server-to-user[-a-zA-Z0-9_=@,.;]+\Z')
+server_to_user_channel_re = re.compile(rf'\A{SERVER_TO_USER_PREFIX}[-a-zA-Z0-9_=@,.;]+\Z')
 app_id_re = re.compile(r'\A[0-9]+\Z')
 pusher_url_re = re.compile(r'\A(http|https)://(.*):(.*)@(.*)/apps/([0-9]+)\Z')
 socket_id_re = re.compile(r'\A\d+\.\d+\Z')
@@ -91,12 +92,10 @@ def validate_channel(channel):
     if len(channel) > 200:
         raise ValueError("Channel too long: %s" % channel)
 
-    if "server-to-user" in channel:
+    if channel.startswith(SERVER_TO_USER_PREFIX):
         if not server_to_user_channel_re.match(channel):
             raise ValueError("Invalid server to user Channel: %s" % channel)
-        return channel
-
-    if not channel_name_re.match(channel):
+    elif not channel_name_re.match(channel):
         raise ValueError("Invalid Channel: %s" % channel)
 
     return channel
